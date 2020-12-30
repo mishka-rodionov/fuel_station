@@ -3,6 +3,7 @@ package com.rodionov
 import com.google.gson.Gson
 import com.rodionov.database.getAllGasolineStations
 import com.rodionov.database.setDatabaseConnection
+import com.rodionov.database.setNewGasolineStation
 import com.rodionov.methods.doGasolineStationNew
 import com.rodionov.model.FuelStation
 import com.rodionov.model.Coordinates
@@ -20,13 +21,15 @@ import io.ktor.client.engine.jetty.*
 import io.ktor.request.receive
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import kotlinx.coroutines.launch
 
 //fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 fun main(args: Array<String>): Unit {
     embeddedServer(Netty, 8080) {
         println("database = ")
-            setDatabaseConnection()
-            getAllGasolineStations()
+        setDatabaseConnection()
+        getAllGasolineStations()
+        setNewGasolineStation(/*gasolineStationNewParams: GasolineStationNewParams*/)
 
         install(Authentication) {
         }

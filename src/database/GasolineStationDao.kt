@@ -1,6 +1,8 @@
 package com.rodionov.database
 
 import com.google.gson.Gson
+import com.rodionov.methods.GS_ID
+import com.rodionov.methods.GasolineStationNewParams
 import com.rodionov.model.GasolineStation
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -22,8 +24,9 @@ object GasolineStations : IntIdTable() {
 
 class GasolineStationDto(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<GasolineStationDto>(GasolineStations)
+
     var gs_id by GasolineStations.gsId
-    var services     by GasolineStations.services
+    var services by GasolineStations.services
     var brand by GasolineStations.brand
     var gasolineTypes by GasolineStations.gasolineTypes
     var coordinates by GasolineStations.coordinates
@@ -36,5 +39,25 @@ fun getAllGasolineStations() {
         station.forEach {
             println("gasoline_station brand = ${it.brand}")
         }
+    }
+}
+
+fun setNewGasolineStation(/*gasolineStationNewParams: GasolineStationNewParams*/) {
+    GS_ID = java.util.UUID.randomUUID().toString()
+    transaction {
+        GasolineStationDto.new {
+            gs_id = "GS_ID"
+            services = "gson.toJson(gasolineStationNewParams.services)"
+            brand = "gasolineStationNewParams.brand"
+            gasolineTypes = "gson.toJson(gasolineStationNewParams.gasoline_types)"
+            coordinates = "gson.toJson(gasolineStationNewParams.coordinates)"
+        }
+//        GasolineStationDto.new {
+//            gs_id = GS_ID
+//            services = gson.toJson(gasolineStationNewParams.services)
+//            brand = gasolineStationNewParams.brand ?: ""
+//            gasolineTypes = gson.toJson(gasolineStationNewParams.gasoline_types)
+//            coordinates = gson.toJson(gasolineStationNewParams.coordinates)
+//        }
     }
 }
