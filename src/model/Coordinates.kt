@@ -1,4 +1,4 @@
-package com.rodionov.oktan.data.entities.model
+package com.rodionov.model
 
 data class Coordinates(
         val latitude: Double? = null,
