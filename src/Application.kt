@@ -4,7 +4,9 @@ import com.google.gson.Gson
 import com.rodionov.database.getAllGasolineStations
 import com.rodionov.database.setDatabaseConnection
 import com.rodionov.database.setNewGasolineStation
+import com.rodionov.methods.GasolineStationNewParams
 import com.rodionov.methods.doGasolineStationNew
+//import com.rodionov.methods.doGasolineStationNew
 import com.rodionov.model.FuelStation
 import com.rodionov.model.Coordinates
 import com.rodionov.model.FuelStationServices
@@ -29,7 +31,7 @@ fun main(args: Array<String>): Unit {
         println("database = ")
         setDatabaseConnection()
         getAllGasolineStations()
-        setNewGasolineStation(/*gasolineStationNewParams: GasolineStationNewParams*/)
+//        setNewGasolineStation(/*gasolineStationNewParams: GasolineStationNewParams*/)
 
         install(Authentication) {
         }
@@ -67,6 +69,8 @@ fun main(args: Array<String>): Unit {
                 )
             }
             post("/gasoline_station/new") {
+                val par = call.receive<GasolineStationNewParams>()
+                println("par = $par")
                 call.respond(doGasolineStationNew(call.receive()))
             }
         }

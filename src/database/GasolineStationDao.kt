@@ -3,61 +3,44 @@ package com.rodionov.database
 import com.google.gson.Gson
 import com.rodionov.methods.GS_ID
 import com.rodionov.methods.GasolineStationNewParams
-import com.rodionov.model.GasolineStation
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 import org.jetbrains.exposed.sql.transactions.transaction
 
 val gson = Gson()
 
-object GasolineStations : IntIdTable() {
+object GasolineStations : Table(name = "gasoline_stations") {
     val gsId: Column<String> = text("gs_id").uniqueIndex()
     val services: Column<String> = text("services")
     val brand: Column<String> = text("brand")
     val gasolineTypes: Column<String> = text("gasoline_types")
     val coordinates: Column<String> = text("coordinates")
-    override val primaryKey = PrimaryKey(id)
-}
-
-class GasolineStationDto(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<GasolineStationDto>(GasolineStations)
-
-    var gs_id by GasolineStations.gsId
-    var services by GasolineStations.services
-    var brand by GasolineStations.brand
-    var gasolineTypes by GasolineStations.gasolineTypes
-    var coordinates by GasolineStations.coordinates
+    override val primaryKey = PrimaryKey(gsId, name = "pk_gasoline_stations")
 }
 
 fun getAllGasolineStations() {
     transaction {
-        val station = GasolineStationDto.all()
+        val station = GasolineStations.selectAll()
         println("size = ${station.count()}")
         station.forEach {
-            println("gasoline_station brand = ${it.brand}")
+            println("gasoline_station brand = ${it[GasolineStations.brand]}")
         }
     }
 }
 
-fun setNewGasolineStation(/*gasolineStationNewParams: GasolineStationNewParams*/) {
+fun setNewGasolineStation(gasolineStationNewParams: GasolineStationNewParams) : String{
     GS_ID = java.util.UUID.randomUUID().toString()
     transaction {
-        GasolineStationDto.new {
-            gs_id = "GS_ID"
-            services = "gson.toJson(gasolineStationNewParams.services)"
-            brand = "gasolineStationNewParams.brand"
-            gasolineTypes = "gson.toJson(gasolineStationNewParams.gasoline_types)"
-            coordinates = "gson.toJson(gasolineStationNewParams.coordinates)"
+        GasolineStations.insert {
+            it[brand] = gasolineStationNewParams.brand.toString()
+            it[gsId] = GS_ID
+//            it[services] = gasolineStationNewParams.services.toString()
+//            it[gasolineTypes] = gasolineStationNewParams.gasoline_types.toString()
+//            it[coordinates] = gasolineStationNewParams.coordinates.toString()
+            it[services] = gson.toJson(gasolineStationNewParams.services)
+            it[gasolineTypes] = gson.toJson(gasolineStationNewParams.gasoline_types)
+            it[coordinates] = gson.toJson(gasolineStationNewParams.coordinates)
         }
-//        GasolineStationDto.new {
-//            gs_id = GS_ID
-//            services = gson.toJson(gasolineStationNewParams.services)
-//            brand = gasolineStationNewParams.brand ?: ""
-//            gasolineTypes = gson.toJson(gasolineStationNewParams.gasoline_types)
-//            coordinates = gson.toJson(gasolineStationNewParams.coordinates)
-//        }
     }
+    return GS_ID
 }
