@@ -34,9 +34,6 @@ fun setNewGasolineStation(gasolineStationNewParams: GasolineStationNewParams) : 
         GasolineStations.insert {
             it[brand] = gasolineStationNewParams.brand.toString()
             it[gsId] = GS_ID
-//            it[services] = gasolineStationNewParams.services.toString()
-//            it[gasolineTypes] = gasolineStationNewParams.gasoline_types.toString()
-//            it[coordinates] = gasolineStationNewParams.coordinates.toString()
             it[services] = gson.toJson(gasolineStationNewParams.services)
             it[gasolineTypes] = gson.toJson(gasolineStationNewParams.gasoline_types)
             it[coordinates] = gson.toJson(gasolineStationNewParams.coordinates)

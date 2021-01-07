@@ -3,10 +3,7 @@ package com.rodionov
 import com.google.gson.Gson
 import com.rodionov.database.getAllGasolineStations
 import com.rodionov.database.setDatabaseConnection
-import com.rodionov.database.setNewGasolineStation
-import com.rodionov.methods.GasolineStationNewParams
 import com.rodionov.methods.doGasolineStationNew
-//import com.rodionov.methods.doGasolineStationNew
 import com.rodionov.model.FuelStation
 import com.rodionov.model.Coordinates
 import com.rodionov.model.FuelStationServices
@@ -23,22 +20,18 @@ import io.ktor.client.engine.jetty.*
 import io.ktor.request.receive
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import kotlinx.coroutines.launch
 
-//fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 fun main(args: Array<String>): Unit {
     embeddedServer(Netty, 8080) {
         println("database = ")
         setDatabaseConnection()
         getAllGasolineStations()
-//        setNewGasolineStation(/*gasolineStationNewParams: GasolineStationNewParams*/)
 
         install(Authentication) {
         }
 
         install(ContentNegotiation) {
-            gson {
-            }
+            gson ()
         }
 
         val client = HttpClient(Jetty) {
@@ -55,6 +48,7 @@ fun main(args: Array<String>): Unit {
 
             get("/fuel_stations") {
                 val station = FuelStation(
+                    id = "qwe",
                     type = FuelStationType.GASOLINE,
                     services = listOf(
                         FuelStationServices.BANK_TERMINAL,
@@ -69,52 +63,8 @@ fun main(args: Array<String>): Unit {
                 )
             }
             post("/gasoline_station/new") {
-                val par = call.receive<GasolineStationNewParams>()
-                println("par = $par")
                 call.respond(doGasolineStationNew(call.receive()))
             }
         }
     }.start(wait = true)
 }
-
-//@Suppress("unused") // Referenced in application.conf
-//@kotlin.jvm.JvmOverloads
-//fun Application.module(testing: Boolean = false) {
-//    install(Authentication) {
-//    }
-//
-//    install(ContentNegotiation) {
-//        gson {
-//        }
-//    }
-//
-//    val client = HttpClient(Jetty) {
-//    }
-//
-//    routing {
-//        get("/") {
-//            call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
-//        }
-//
-//        get("/json/gson") {
-//            call.respond(mapOf("hello" to "world"))
-//        }
-//
-//        get("/fuel_stations") {
-//            val station = FuelStation(
-//                type = FuelStationType.GASOLINE,
-//                services = listOf(
-//                    FuelStationServices.BANK_TERMINAL,
-//                    FuelStationServices.CAFE,
-//                    FuelStationServices.CAR_WASH
-//                ),
-//                coordinates = Coordinates(45.42736, 54.2864),
-//                brand = "THK"
-//            )
-//            call.respond(
-//                Gson().toJson(station)
-//            )
-//        }
-//    }
-//}
-
