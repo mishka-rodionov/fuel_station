@@ -8,7 +8,7 @@ class GasolineStation(
         services: List<FuelStationServices>?,
         coordinates: Coordinates?,
         brand: String?,
-        gsId: String,
+        id: String,
         @SerializedName("gasoline_types")
         val gasolineTypes: List<GasolineType>? = null
-): FuelStation(id = gsId, type = type, services = services, coordinates = coordinates, brand = brand)
+): FuelStation(id = id, type = type, services = services, coordinates = coordinates, brand = brand)

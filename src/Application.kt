@@ -1,6 +1,8 @@
 package com.rodionov
 
 import com.google.gson.Gson
+import com.rodionov.database.getAllChargingStations
+import com.rodionov.database.getAllGasStations
 import com.rodionov.database.getAllGasolineStations
 import com.rodionov.database.setDatabaseConnection
 import com.rodionov.methods.doGasolineStationNew
@@ -71,10 +73,16 @@ fun main(args: Array<String>): Unit {
                 }
             }
             get("/gas_stations") {
-
+                launch {
+                    val stations = getAllGasStations()
+                    call.respond(stations)
+                }
             }
-            get("charging_stations") {
-
+            get("/charging_stations") {
+                launch {
+                    val stations = getAllChargingStations()
+                    call.respond(stations)
+                }
             }
             post("/gasoline_station/new") {
                 val station = doGasolineStationNew(call.receive())

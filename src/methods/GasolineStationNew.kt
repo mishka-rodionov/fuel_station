@@ -19,9 +19,9 @@ fun doGasolineStationNew(
     gasolineStationNewParams: GasolineStationNewParams
 ): GasolineStation {
 
-    val gsId = setNewGasolineStation(gasolineStationNewParams)
+    val id = setNewGasolineStation(gasolineStationNewParams)
     return GasolineStation(
-        gsId = gsId,
+        id = id,
         services = gasolineStationNewParams.services,
         brand = gasolineStationNewParams.brand,
         gasolineTypes = gasolineStationNewParams.gasoline_types,

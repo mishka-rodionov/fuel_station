@@ -16,12 +16,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 val gson = Gson()
 
 object GasolineStations : Table(name = "gasoline_stations") {
-    val gsId: Column<String> = text("gs_id").uniqueIndex()
+    val id: Column<String> = text("id").uniqueIndex()
     val services: Column<String> = text("services")
     val brand: Column<String> = text("brand")
     val gasolineTypes: Column<String> = text("gasoline_types")
     val coordinates: Column<String> = text("coordinates")
-    override val primaryKey = PrimaryKey(gsId, name = "pk_gasoline_stations")
+    override val primaryKey = PrimaryKey(id, name = "pk_gasoline_stations")
 }
 
 suspend fun getAllGasolineStations(): List<GasolineStation> {
@@ -30,7 +30,7 @@ suspend fun getAllGasolineStations(): List<GasolineStation> {
         println("size = ${query.count()}")
         val stations = query.map {
             GasolineStation(
-                gsId = it[GasolineStations.gsId],
+                id = it[GasolineStations.id],
                 type = FuelStationType.GASOLINE,
                 services = gson.fromJson<List<FuelStationServices>>(it[GasolineStations.services]),
                 brand = it[GasolineStations.brand],
@@ -47,7 +47,7 @@ fun setNewGasolineStation(gasolineStationNewParams: GasolineStationNewParams): S
     transaction {
         GasolineStations.insert {
             it[brand] = gasolineStationNewParams.brand.toString()
-            it[gsId] = GS_ID
+            it[id] = GS_ID
             it[services] = gson.toJson(gasolineStationNewParams.services)
             it[gasolineTypes] = gson.toJson(gasolineStationNewParams.gasoline_types)
             it[coordinates] = gson.toJson(gasolineStationNewParams.coordinates)
