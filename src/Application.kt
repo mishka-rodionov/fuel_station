@@ -5,13 +5,13 @@ import com.rodionov.database.getAllChargingStations
 import com.rodionov.database.getAllGasStations
 import com.rodionov.database.getAllGasolineStations
 import com.rodionov.database.setDatabaseConnection
+import com.rodionov.methods.doChargingStationNew
 import com.rodionov.methods.doGasStationNew
 import com.rodionov.methods.doGasolineStationNew
 import com.rodionov.model.FuelStation
 import com.rodionov.model.Coordinates
 import com.rodionov.model.FuelStationServices
 import com.rodionov.model.FuelStationType
-import com.rodionov.model.gasoline.GasolineStation
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -91,6 +91,10 @@ fun main(args: Array<String>): Unit {
             }
             post("/gas_station/new") {
                 val station = doGasStationNew(call.receive())
+                call.respond(station)
+            }
+            post("/charging_station/new") {
+                val station = doChargingStationNew(call.receive())
                 call.respond(station)
             }
         }

@@ -10,7 +10,7 @@ import com.rodionov.model.gas.GasType
 
 data class GasStationNewParams(
     @SerializedName("type")
-    val type: FuelStationType = FuelStationType.GASOLINE,
+    val type: FuelStationType = FuelStationType.GAS,
     @SerializedName("services")
     val services: List<FuelStationServices>? = null,
     @SerializedName("coordinates")
