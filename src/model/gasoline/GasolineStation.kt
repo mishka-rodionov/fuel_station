@@ -1,6 +1,7 @@
-package com.rodionov.model
+package com.rodionov.model.gasoline
 
 import com.google.gson.annotations.SerializedName
+import com.rodionov.model.*
 
 class GasolineStation(
         type: FuelStationType = FuelStationType.GASOLINE,

@@ -2,6 +2,8 @@ package com.rodionov.methods
 
 import com.rodionov.database.setNewGasolineStation
 import com.rodionov.model.*
+import com.rodionov.model.gasoline.GasolineStation
+import com.rodionov.model.gasoline.GasolineType
 
 data class GasolineStationNewParams(
     val type: FuelStationType = FuelStationType.GASOLINE,

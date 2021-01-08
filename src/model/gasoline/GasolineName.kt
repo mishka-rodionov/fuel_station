@@ -1,4 +1,4 @@
-package com.rodionov.model
+package com.rodionov.model.gasoline
 
 enum class GasolineName {
 
