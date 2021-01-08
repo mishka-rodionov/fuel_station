@@ -28,7 +28,7 @@ fun getAllGasolineStations() {
     }
 }
 
-fun setNewGasolineStation(gasolineStationNewParams: GasolineStationNewParams) : String{
+fun setNewGasolineStation(gasolineStationNewParams: GasolineStationNewParams): String {
     GS_ID = java.util.UUID.randomUUID().toString()
     transaction {
         GasolineStations.insert {
