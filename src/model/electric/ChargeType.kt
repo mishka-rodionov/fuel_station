@@ -2,7 +2,7 @@ package com.rodionov.model.electric
 
 import com.google.gson.annotations.SerializedName
 
-class ChargeType(
+data class ChargeType(
     @SerializedName("charge_name")
     val chargeName: ChargeName? = null,
     @SerializedName("price_per_minute")

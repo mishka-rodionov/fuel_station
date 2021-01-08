@@ -18,7 +18,7 @@ data class ChargingStationNewParams(
     val coordinates: Coordinates? = null,
     @SerializedName("brand")
     val brand: String? = null,
-    @SerializedName("charge_types")
+    @SerializedName("charging_types")
     val chargeTypes: List<ChargeType>? = null,
     @SerializedName("connector_types")
     val connectorTypes: List<ConnectorType>? = null
