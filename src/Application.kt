@@ -8,6 +8,7 @@ import com.rodionov.model.FuelStation
 import com.rodionov.model.Coordinates
 import com.rodionov.model.FuelStationServices
 import com.rodionov.model.FuelStationType
+import com.rodionov.model.gasoline.GasolineStation
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -20,12 +21,13 @@ import io.ktor.client.engine.jetty.*
 import io.ktor.request.receive
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import kotlinx.coroutines.launch
 
 fun main(args: Array<String>): Unit {
     embeddedServer(Netty, 8080) {
         println("database = ")
         setDatabaseConnection()
-        getAllGasolineStations()
+//        getAllGasolineStations()
 
         install(Authentication) {
         }
@@ -62,8 +64,21 @@ fun main(args: Array<String>): Unit {
                     Gson().toJson(station)
                 )
             }
+            get("/gasoline_stations") {
+                launch {
+                    val stations = getAllGasolineStations()
+                    call.respond(stations)
+                }
+            }
+            get("/gas_stations") {
+
+            }
+            get("charging_stations") {
+
+            }
             post("/gasoline_station/new") {
-                call.respond(doGasolineStationNew(call.receive()))
+                val station = doGasolineStationNew(call.receive())
+                call.respond(station)
             }
         }
     }.start(wait = true)

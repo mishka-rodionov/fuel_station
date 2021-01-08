@@ -1,8 +1,14 @@
 package com.rodionov.database
 
 import com.google.gson.Gson
+import com.rodionov.fromJson
 import com.rodionov.methods.GS_ID
 import com.rodionov.methods.GasolineStationNewParams
+import com.rodionov.model.Coordinates
+import com.rodionov.model.FuelStationServices
+import com.rodionov.model.FuelStationType
+import com.rodionov.model.gasoline.GasolineStation
+import com.rodionov.model.gasoline.GasolineType
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -18,14 +24,22 @@ object GasolineStations : Table(name = "gasoline_stations") {
     override val primaryKey = PrimaryKey(gsId, name = "pk_gasoline_stations")
 }
 
-fun getAllGasolineStations() {
-    transaction {
-        val station = GasolineStations.selectAll()
-        println("size = ${station.count()}")
-        station.forEach {
-            println("gasoline_station brand = ${it[GasolineStations.brand]}")
+suspend fun getAllGasolineStations(): List<GasolineStation> {
+    return suspendedTransactionAsync {
+        val query = GasolineStations.selectAll()
+        println("size = ${query.count()}")
+        val stations = query.map {
+            GasolineStation(
+                gsId = it[GasolineStations.gsId],
+                type = FuelStationType.GASOLINE,
+                services = gson.fromJson<List<FuelStationServices>>(it[GasolineStations.services]),
+                brand = it[GasolineStations.brand],
+                gasolineTypes = gson.fromJson<List<GasolineType>>(it[GasolineStations.gasolineTypes]),
+                coordinates = gson.fromJson<Coordinates>(it[GasolineStations.coordinates])
+            )
         }
-    }
+        stations
+    }.await()
 }
 
 fun setNewGasolineStation(gasolineStationNewParams: GasolineStationNewParams): String {
