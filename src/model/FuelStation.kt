@@ -9,7 +9,7 @@ open class FuelStation(
     var type: FuelStationType? = null,
     @SerializedName("services")
     var services: List<FuelStationServices>? = null,
-    @SerializedName("cordinates")
+    @SerializedName("coordinates")
     var coordinates: Coordinates? = null,
     @SerializedName("brand")
     var brand: String? = null,
