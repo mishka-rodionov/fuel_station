@@ -14,6 +14,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.*
 
 object ChargingStations : Table(name = "charging_stations") {
     val id: Column<String> = text("id").uniqueIndex()
@@ -22,6 +23,8 @@ object ChargingStations : Table(name = "charging_stations") {
     val chargingTypes: Column<String> = text("charging_types")
     val connectorTypes: Column<String> = text("connector_types")
     val coordinates: Column<String> = text("coordinates")
+    val dateOfCreation: Column<String> = text("date_of_creation")
+    val creatorId: Column<String> = text("creator_id")
     override val primaryKey = PrimaryKey(id, name = "pk_charging_stations")
 }
 
@@ -38,14 +41,17 @@ suspend fun getAllChargingStations(): List<ChargingStation> {
                 chargeTypes = gson.fromJson<List<ChargeType>>(it[ChargingStations.chargingTypes]),
                 coordinates = gson.fromJson<Coordinates>(it[ChargingStations.coordinates]),
                 connectorTypes = gson.fromJson<List<ConnectorType>>(it[ChargingStations.connectorTypes]),
+                dateOfCreation = gson.fromJson<Long>(it[ChargingStations.dateOfCreation]),
+                creatorId = it[ChargingStations.creatorId]
             )
         }
         stations
     }.await()
 }
 
-fun setNewChargingStation(chargingStationNewParams: ChargingStationNewParams): String {
-    val chargingId = java.util.UUID.randomUUID().toString()
+fun setNewChargingStation(chargingStationNewParams: ChargingStationNewParams): ChargingStation {
+    val chargingId = UUID.randomUUID().toString()
+    val currentDate = Calendar.getInstance().timeInMillis
     transaction {
         ChargingStations.insert {
             it[brand] = chargingStationNewParams.brand.toString()
@@ -54,7 +60,21 @@ fun setNewChargingStation(chargingStationNewParams: ChargingStationNewParams): S
             it[chargingTypes] = gson.toJson(chargingStationNewParams.chargeTypes)
             it[coordinates] = gson.toJson(chargingStationNewParams.coordinates)
             it[connectorTypes] = gson.toJson(chargingStationNewParams.connectorTypes)
+            it[dateOfCreation] = gson.toJson(currentDate)
+            it[creatorId] = chargingStationNewParams.creatorId.toString()
         }
     }
-    return chargingId
+    return chargingStationNewParams.run {
+        ChargingStation(
+            type = FuelStationType.ELECTRIC,
+            services = services,
+            coordinates = coordinates,
+            brand = brand,
+            id = chargingId,
+            dateOfCreation = currentDate,
+            creatorId = creatorId,
+            chargeTypes = chargeTypes,
+            connectorTypes = connectorTypes
+        )
+    }
 }

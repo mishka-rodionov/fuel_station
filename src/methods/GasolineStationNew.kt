@@ -1,31 +1,24 @@
 package com.rodionov.methods
 
+import com.google.gson.annotations.SerializedName
 import com.rodionov.database.setNewGasolineStation
 import com.rodionov.model.*
-import com.rodionov.model.gasoline.GasolineStation
 import com.rodionov.model.gasoline.GasolineType
 
 data class GasolineStationNewParams(
+    @SerializedName("type")
     val type: FuelStationType = FuelStationType.GASOLINE,
+    @SerializedName("services")
     val services: List<FuelStationServices>? = null,
+    @SerializedName("coordinates")
     val coordinates: Coordinates? = null,
+    @SerializedName("brand")
     val brand: String? = null,
-    val gasoline_types: List<GasolineType>? = null
+    @SerializedName("gasoline_types")
+    val gasolineTypes: List<GasolineType>? = null,
+    @SerializedName("creator_id")
+    val creatorId: String? = null
 )
 
-var GS_ID: String = "-1"
-
-fun doGasolineStationNew(
-    gasolineStationNewParams: GasolineStationNewParams
-): GasolineStation {
-
-    val id = setNewGasolineStation(gasolineStationNewParams)
-    return GasolineStation(
-        id = id,
-        services = gasolineStationNewParams.services,
-        brand = gasolineStationNewParams.brand,
-        gasolineTypes = gasolineStationNewParams.gasoline_types,
-        coordinates = gasolineStationNewParams.coordinates
-    )
-}
+fun doGasolineStationNew(gasolineStationNewParams: GasolineStationNewParams) = setNewGasolineStation(gasolineStationNewParams)
 

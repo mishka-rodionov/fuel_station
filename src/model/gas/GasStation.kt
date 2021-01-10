@@ -12,6 +12,16 @@ class GasStation(
     coordinates: Coordinates?,
     brand: String?,
     id: String,
+    dateOfCreation: Long?,
+    creatorId: String?,
     @SerializedName("gas_types")
     val gasTypes: List<GasType>? = null
-) : FuelStation(type = type, services = services, coordinates = coordinates, brand = brand, id = id)
+) : FuelStation(
+    type = type,
+    services = services,
+    coordinates = coordinates,
+    brand = brand,
+    id = id,
+    dateOfCreation = dateOfCreation,
+    creatorId = creatorId
+)

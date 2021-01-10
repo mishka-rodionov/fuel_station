@@ -18,18 +18,9 @@ data class GasStationNewParams(
     @SerializedName("brand")
     val brand: String? = null,
     @SerializedName("gas_types")
-    val gasTypes: List<GasType>? = null
+    val gasTypes: List<GasType>? = null,
+    @SerializedName("creator_id")
+    val creatorId: String? = null
 )
 
-fun doGasStationNew(
-    gasStationNewParams: GasStationNewParams
-): GasStation {
-    val id = setNewGasStation(gasStationNewParams)
-    return GasStation(
-        id = id,
-        services = gasStationNewParams.services,
-        brand = gasStationNewParams.brand,
-        gasTypes = gasStationNewParams.gasTypes,
-        coordinates = gasStationNewParams.coordinates
-    )
-}
+fun doGasStationNew(gasStationNewParams: GasStationNewParams) = setNewGasStation(gasStationNewParams)

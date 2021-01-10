@@ -12,8 +12,18 @@ class ChargingStation(
     coordinates: Coordinates?,
     brand: String?,
     id: String,
+    dateOfCreation: Long?,
+    creatorId: String?,
     @SerializedName("charging_types")
     val chargeTypes: List<ChargeType>? = null,
     @SerializedName("connector_types")
     val connectorTypes: List<ConnectorType>? = null
-) : FuelStation(type = type, services = services, coordinates = coordinates, brand = brand, id = id)
+) : FuelStation(
+    type = type,
+    services = services,
+    coordinates = coordinates,
+    brand = brand,
+    id = id,
+    dateOfCreation = dateOfCreation,
+    creatorId = creatorId
+)
