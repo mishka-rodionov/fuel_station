@@ -46,6 +46,23 @@ suspend fun getAllGasolineStations(): List<GasolineStation> {
     }.await()
 }
 
+suspend fun getGasolineStations(offset: Int, limit: Int): List<GasolineStation> {
+    return suspendedTransactionAsync {
+        GasolineStations.selectAll().limit(n = limit, offset = offset.toLong()).map {
+            GasolineStation(
+                id = it[GasolineStations.id],
+                type = FuelStationType.GASOLINE,
+                services = gson.fromJson<List<FuelStationServices>>(it[GasolineStations.services]),
+                brand = it[GasolineStations.brand],
+                gasolineTypes = gson.fromJson<List<GasolineType>>(it[GasolineStations.gasolineTypes]),
+                coordinates = gson.fromJson<Coordinates>(it[GasolineStations.coordinates]),
+                dateOfCreation = gson.fromJson<Long>(it[GasolineStations.dateOfCreation]),
+                creatorId = it[GasolineStations.creatorId]
+            )
+        }
+    }.await()
+}
+
 fun setNewGasolineStation(gasolineStationNewParams: GasolineStationNewParams): GasolineStation {
     val gasolineId = UUID.randomUUID().toString()
     val currentDate = Calendar.getInstance().timeInMillis

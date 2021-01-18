@@ -7,6 +7,7 @@ import com.rodionov.database.getAllGasolineStations
 import com.rodionov.database.setDatabaseConnection
 import com.rodionov.methods.doChargingStationNew
 import com.rodionov.methods.doGasStationNew
+import com.rodionov.methods.doGasolineStationList
 import com.rodionov.methods.doGasolineStationNew
 import com.rodionov.model.FuelStation
 import com.rodionov.model.Coordinates
@@ -84,6 +85,9 @@ fun main(args: Array<String>): Unit {
                     val stations = getAllChargingStations()
                     call.respond(stations)
                 }
+            }
+            post("/gasoline_station_list") {
+                call.respond(doGasolineStationList(call.receive()))
             }
             post("/gasoline_station/new") {
                 val station = doGasolineStationNew(call.receive())
